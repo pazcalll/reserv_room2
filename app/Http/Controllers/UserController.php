@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use DB;
 
 class UserController extends Controller
@@ -39,5 +41,26 @@ class UserController extends Controller
             ->with('room_id', $room_id)
             ->with('end', $end)
             ->with('start', $start);
+    }
+    public function changepw()
+    {
+        return view('user/newpw');
+    }
+    public function newpw(Request $request)
+    {
+        if (!(Hash::check($request->get('oldpw'), Auth::user()->password))) {
+            return back()->with('error', 'Your old password does not match the database record.');
+        }
+        if (strcmp($request->get('oldpw'), $request->get('newpw'))==0) {
+            return back()->with('error', 'Your new password cannot be same with the new password.');
+        }
+        $request->validate([
+            'oldpw' => 'required',
+            'newpw' => 'required|string|min:8|confirmed'
+        ]);
+        $user=Auth::user();
+        $user->password=bcrypt($request->get('newpw'));
+        $user->save();
+        return back()->with('message', 'Your password changed successfully.');
     }
 }

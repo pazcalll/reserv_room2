@@ -141,16 +141,16 @@
                           <img width="320" height="240" id="scanned-img" src="">
                       </div>
                       <div class="caption">
-                          <h3>Scanned result</h3>
-                          <p hidden style="color: #272822" id="scanned-QR"></p>
-                          <input type="text" id="scanned-QR2" value="" disabled><br>
-                          <button class="btn btn-info" onclick="change()" style="margin-top: 20px;">Read</button><br>
-                          <a href="" class="btn btn-success">Confirm</a>
-                          <script>
-                              function change() {
-                                  document.getElementById("scanned-QR2").value = document.getElementById("scanned-QR").innerText;
-                              }
-                          </script>
+                        <h3>Scanned result</h3>
+                        <p hidden style="color: #272822" id="scanned-QR"></p>
+                        <input type="text" id="scanned-QR2" value="" disabled><br>
+                        <button class="btn btn-info" onclick="change()" style="margin-top: 20px;">Read</button><br>
+                        <a href="" class="btn btn-success">Confirm</a>
+                        <script>
+                            function change() {
+                                document.getElementById("scanned-QR2").value = document.getElementById("scanned-QR").innerText;
+                            }
+                        </script>
                       </div>
                   </div>
               </div>

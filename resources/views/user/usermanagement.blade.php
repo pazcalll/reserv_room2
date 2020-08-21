@@ -32,7 +32,7 @@
               <tr style="height: 90px">
                 <td></td>
                 <td></td>
-                <td><a href="#" class="btn btn-warning" style="outline: none;">Change Password</a></td>
+                <td><a href="{{url('usermanagement/changepw')}}" class="btn btn-warning" style="outline: none;">Change Password</a></td>
               </tr>
             </table>
           </div>
