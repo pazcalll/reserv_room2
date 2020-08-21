@@ -35,6 +35,11 @@ class UserController extends Controller
     }
     public function scan(Request $request, $room_id)
     {
+        if ($request->start >= $request->end) {
+            return back()->with('end', $request->end)
+                ->with('start', $request->start)
+                ->with('error','Start time must less than end time');
+        }
         $end = $request->end;
         $start = $request->start;
         return view('user/scanner')
