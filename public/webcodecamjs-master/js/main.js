@@ -103,7 +103,7 @@
                 params: {
                     order: 'save_data',
                     img: res.imgData,
-                    txt: res.format + ": " + res.code,
+                    txt: res.code,
                     app: 'WebCodeCamJS'
                 }
             }, function() {}, true);
@@ -114,7 +114,7 @@
                 }, 300);
             });
             scannedImg.src = res.imgData;
-            scannedQR[txt] = res.format + ": " + res.code;
+            scannedQR[txt] = res.code;
         },
         getDevicesError: function(error) {
             var p, message = "Error detected with the following parameters:\n";

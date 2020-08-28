@@ -9,10 +9,10 @@
               {{session('error')}}
           </div>
         @endif
-        @if (session()->get('end'))
+        {{-- @if (session()->get('end'))
           start: {{session()->get('start')}} <br>
           end: {{session()->get('end')}}
-        @endif
+        @endif --}}
         <h2 class="content-title" for="start"><b>Start Time</b></h2>
       <div class="container d-flex justify-content-begin">
         <div class="col-12">

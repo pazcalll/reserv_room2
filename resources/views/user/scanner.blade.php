@@ -107,6 +107,11 @@
               </div>
           </div>
           <div class="panel-body text-center">
+            @if (session('error'))
+                <div class="alert alert-danger" role="alert">
+                    {{session('error')}}
+                </div>
+            @endif
               <div class="col-md-6">
                   <div class="well" style="position: relative;display: inline-block;">
                       <canvas width="320" height="240" id="webcodecam-canvas"></canvas>
@@ -142,13 +147,21 @@
                       </div>
                       <div class="caption">
                         <h3>Scanned result</h3>
-                        <p style="color: #272822" id="scanned-QR"></p>
-                        <input type="text" id="scanned-QR2" value="" disabled><br>
-                        <button class="btn btn-info" onclick="change()" style="margin-top: 20px;">Read</button><br>
-                        <a href="" class="btn btn-success">Confirm</a>
+                        {{-- <p hidden style="color: #272822" id="scanned-QR"></p> --}}
+                        {{-- <button class="btn btn-info" onclick="change()" style="margin-top: 20px;">Read</button><br> --}}
+                        {{-- <button onclick="change()" class="btn btn-block" id="read">read</button> --}}
+                        <form action="{{url('saveroom')}}" method="Post">
+                            @csrf
+                            <input type="text" id="scanned-QR" name="scanned_QR" value="" hidden><br>
+                            <input type="text" name="room_id" id="room_id"  hidden value="{{$room_id}}">
+                            <input type="time" name="start" id="start"  hidden value="{{$start}}">
+                            <input type="time" name="end" id="end" hidden value="{{$end}}">
+                            <button type="submit" onclick="change()" href="" class="btn btn-success">Confirm</button>
+                        </form>
                         <script>
                             function change() {
-                                document.getElementById("scanned-QR2").value = document.getElementById("scanned-QR").innerText;
+                                document.getElementById("scanned-QR").value = document.getElementById("scanned-QR").innerText;
+                                document.getElementById("read").style.display="none";
                             }
                         </script>
                       </div>

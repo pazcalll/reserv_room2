@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use DB;
+use Symfony\Component\VarDumper\VarDumper;
 
 class UserController extends Controller
 {
@@ -67,5 +68,33 @@ class UserController extends Controller
         $user->password=bcrypt($request->get('newpw'));
         $user->save();
         return back()->with('message', 'Your password changed successfully.');
+    }
+    public function saveroom(Request $request)
+    {
+        if (!isset($request->scanned_QR)) {
+            return back()->with('error', 'Scan the QR code first.');
+        }
+        elseif ($request->scanned_QR == $request->room_id) {
+            $insert_data = array(
+                'room_id' => $request->room_id,
+                'status' => '',
+                'room_start' => $request->start,
+                'room_end' => $request->end,
+                'id' => Auth::user()->id,
+                'room_date' => date('y-m-d'),
+                'till_finish' => 1
+            );
+            DB::table('borrow')->insert($insert_data);
+            return view('user/myroom')
+                ->with('end', $request->end)
+                ->with('start', $request->start)
+                ->with('room_id', $request->room_id)
+                ->with('scanned_QR', $request->scanned_QR)
+                ->with('request', $request)
+                ;
+        }
+        else{
+            return back()->with('error', 'QR Code is not correct.');
+        }
     }
 }

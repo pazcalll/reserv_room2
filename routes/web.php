@@ -21,9 +21,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/index', 'UserController@index')->name('index');
-Route::get('myroom', 'UserController@myroom')->name('myroom');
+Route::get('/myroom', 'UserController@myroom')->name('myroom');
 Route::get('/usermanagement', 'UserController@usermanagement')->name('usermanagement');
 Route::get('/usermanagement/changepw', 'UserController@changepw')->name('changepw');
 Route::post('/usermanagement/newpw', 'UserController@newpw')->name('newpw');
 Route::get('/timer/{room_id}','UserController@timer')->name('timer');
 Route::get('/timer/{room_id}/scan','UserController@scan')->name('scan');
+Route::post('/saveroom', 'UserController@saveroom')->name('saveroom');
