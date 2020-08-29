@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use DB;
+use Illuminate\Support\Carbon;
 use Symfony\Component\VarDumper\VarDumper;
 
 class UserController extends Controller
@@ -24,11 +25,17 @@ class UserController extends Controller
     }
     public function myroom()
     {
-        return view('user/myroom');
+        $data=DB::table('borrow')->select('*')
+            ->where('room_start' ,'<', Carbon::now()->toTimeString())
+            ->where('room_end' ,'>', Carbon::now()->toTimeString())
+            ->where('room_date', Carbon::now()->toDateString())
+            ->get();
+        return view('user/myroom')
+            ->with('data',$data);
     }
     public function usermanagement()
     {
-        return view('user/usermanagement');
+        return view('user/opener');
     }
     public function timer($room_id)
     {
@@ -85,7 +92,13 @@ class UserController extends Controller
                 'till_finish' => 1
             );
             DB::table('borrow')->insert($insert_data);
+            $data=DB::table('borrow')->select('*')
+                ->where('room_start' ,'<', Carbon::now()->toTimeString())
+                ->where('room_end' ,'>', Carbon::now()->toTimeString())
+                ->where('room_date', Carbon::now()->toDateString())
+                ->get();
             return view('user/myroom')
+                ->with('data',$data)
                 ->with('end', $request->end)
                 ->with('start', $request->start)
                 ->with('room_id', $request->room_id)

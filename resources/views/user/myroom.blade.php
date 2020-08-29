@@ -8,13 +8,9 @@
       <div class="col-12">
         <div class="row d-flex justify-content-begin" >
           <div class="col-4">
-            <a href="#" class="content-item-available">Room Name</a>
-          </div>
-          <div class="col-4">
-            <a href="#" class="content-item-available">Room Name</a>
-          </div>
-          <div class="col-4">
-            <a href="#" class="content-item-available">Room Name</a>
+            @foreach ($data as $row)
+              <a href="#" class="content-item-available">{{$row->room_id}}</a>
+            @endforeach
           </div>
         </div>
       </div>
@@ -23,12 +19,6 @@
     <div class="container">
       <div class="col-12">
         <div class="row d-flex justify-content-begin">
-          <div class="col-4">
-            <a href="#" class="content-item-unavailable">Room Name</a>
-          </div>
-          <div class="col-4">
-            <a href="#" class="content-item-unavailable">Room Name</a>
-          </div>
           <div class="col-4">
             <a href="#" class="content-item-unavailable">Room Name</a>
           </div>
