@@ -29,9 +29,16 @@ class UserController extends Controller
             ->where('room_start' ,'<', Carbon::now()->toTimeString())
             ->where('room_end' ,'>', Carbon::now()->toTimeString())
             ->where('room_date', Carbon::now()->toDateString())
+            ->where('id', Auth::user()->id)
+            ->get();
+        $pending=DB::table('borrow')->select('*')
+            ->where('room_start', '>', Carbon::now()->toTimeString())
+            ->where('room_date', Carbon::now()->toDateString())
+            ->where('id', Auth::user()->id)
             ->get();
         return view('user/myroom')
-            ->with('data',$data);
+            ->with('data',$data)
+            ->with('pending',$pending);
     }
     public function usermanagement()
     {
@@ -92,13 +99,24 @@ class UserController extends Controller
                 'till_finish' => 1
             );
             DB::table('borrow')->insert($insert_data);
+            
+            // takes data of both active room and pending room
             $data=DB::table('borrow')->select('*')
                 ->where('room_start' ,'<', Carbon::now()->toTimeString())
                 ->where('room_end' ,'>', Carbon::now()->toTimeString())
                 ->where('room_date', Carbon::now()->toDateString())
+                ->where('id', Auth::user()->id)
                 ->get();
+            $pending=DB::table('borrow')->select('*')
+                ->where('room_start', '>', Carbon::now()->toTimeString())
+                ->where('room_date', Carbon::now()->toDateString())
+                ->where('id', Auth::user()->id)
+                ->get();
+
+            // page if everything loaded successfully
             return view('user/myroom')
                 ->with('data',$data)
+                ->with('pending',$pending)
                 ->with('end', $request->end)
                 ->with('start', $request->start)
                 ->with('room_id', $request->room_id)
