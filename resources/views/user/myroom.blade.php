@@ -24,7 +24,7 @@
         <div class="row d-flex justify-content-begin">
           <div class="col-4">
             @foreach ($pending as $p)
-              <a href="{{'myroom'}}/{{$row->room_id}}" class="content-item-unavailable">{{$p->room_id}}</a>
+              <a href="{{'myroom'}}/{{$p->room_id}}" class="content-item-unavailable">{{$p->room_id}}</a>
             @endforeach
             @if ($pending == "[]")
               <span href="#" style="width: 200px" class="content-item-unavailable">No room in the queue is available</span>

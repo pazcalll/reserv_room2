@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Queue\SerializesModels;
 use Symfony\Component\VarDumper\VarDumper;
 
 class UserController extends Controller
@@ -137,26 +138,23 @@ class UserController extends Controller
 
             // page if everything loaded successfully
             // return view('user/myroom')
-            //     ->with('data',$data)
-            //     ->with('pending',$pending)
-            //     ->with('end', $request->end)
-            //     ->with('start', $request->start)
-            //     ->with('room_id', $request->room_id)
-            //     ->with('scanned_QR', $request->scanned_QR)
-            //     ->with('request', $request)
+                // ->with('data',$data)
+                // ->with('pending',$pending)
+                // ->with('end', $request->end)
+                // ->with('start', $request->start)
+                // ->with('room_id', $request->room_id)
+                // ->with('scanned_QR', $request->scanned_QR)
+                // ->with('request', $request)
             //     ;
-            return redirect('myroom')
-                ->with('data',$data)
-                ->with('pending',$pending)
-                ->with('end', $request->end)
-                ->with('start', $request->start)
-                ->with('room_id', $request->room_id)
-                ->with('scanned_QR', $request->scanned_QR)
-                ->with('request', $request)
+            return redirect()->route('myroom')
                 ;
         }
         else{
             return back()->with('error', 'QR Code is not correct.');
         }
+    }
+    public function cancelroom($room_id)
+    {
+        # code...
     }
 }

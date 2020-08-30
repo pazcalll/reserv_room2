@@ -9,10 +9,10 @@
             <div class="row d-flex justify-content-begin" >
                 <p style="color: black;  margin-left: -30px; margin-top: -20px">This room is being used, do you want to finish your borrowing session?</p><br>
               <div class="col-4">
-                <a href="#" class="content-item-unavailable">Yes</a>
+                <a href="{{url('cancelroom')}}" class="content-item-unavailable">Yes</a>
               </div>
               <div class="col-4">
-                <a href="#" class="content-item-available">No</a>
+                <a href="{{url('myroom')}}" class="content-item-available">No</a>
               </div>
             </div>
           </div>
