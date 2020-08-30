@@ -3,6 +3,11 @@
 <body style="margin-bottom: 300px;">
   <div class="d-flex justify-content-begin">
     <div class="content" >
+      @if (session('error'))
+        <div class="alert alert-danger" role="alert">
+            {{session('error')}}
+        </div>
+      @endif
       <h2 class="content-title"><b>Available Room</b></h2>
     <div class="container d-flex justify-content-begin">
       <div class="col-12">

@@ -117,9 +117,11 @@
   /* hover */
   .content-item-available:hover{
     background: rgba(100,100,255,1);
+    color: white;
   }
   .content-item-unavailable:hover{
     background: rgba(255,100,100,0.70);
+    color: white;
   }
   
   /* grid positioning */

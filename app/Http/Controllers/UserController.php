@@ -40,12 +40,34 @@ class UserController extends Controller
             ->with('data',$data)
             ->with('pending',$pending);
     }
+    public function roomconfig($room_id)
+    {
+        return view('user/roomconfig')->with('room_id',$room_id);
+    }
     public function usermanagement()
     {
-        return view('user/opener');
+        return view('user/usermanagement');
     }
     public function timer($room_id)
     {
+        $data=DB::table('borrow')->select('*')
+            ->where('room_start' ,'<', Carbon::now()->toTimeString())
+            ->where('room_end' ,'>', Carbon::now()->toTimeString())
+            ->where('room_date', Carbon::now()->toDateString())
+            ->where('id', Auth::user()->id)
+            ->get();
+        $pending=DB::table('borrow')->select('*')
+            ->where('room_start', '>', Carbon::now()->toTimeString())
+            ->where('room_date', Carbon::now()->toDateString())
+            ->where('id', Auth::user()->id)
+            ->get();
+
+        if ($data != "[]") {
+            return back()->with('error', 'You already have an active room');
+        }
+        if ($pending != "[]") {
+            return back()->with('error', 'You already have a pending room');
+        }
         return view('user/timer')->with('room_id', $room_id);
     }
     public function scan(Request $request, $room_id)
@@ -114,7 +136,16 @@ class UserController extends Controller
                 ->get();
 
             // page if everything loaded successfully
-            return view('user/myroom')
+            // return view('user/myroom')
+            //     ->with('data',$data)
+            //     ->with('pending',$pending)
+            //     ->with('end', $request->end)
+            //     ->with('start', $request->start)
+            //     ->with('room_id', $request->room_id)
+            //     ->with('scanned_QR', $request->scanned_QR)
+            //     ->with('request', $request)
+            //     ;
+            return redirect('myroom')
                 ->with('data',$data)
                 ->with('pending',$pending)
                 ->with('end', $request->end)
