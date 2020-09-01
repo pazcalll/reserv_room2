@@ -31,11 +31,13 @@ class UserController extends Controller
             ->where('room_end' ,'>', Carbon::now()->toTimeString())
             ->where('room_date', Carbon::now()->toDateString())
             ->where('id', Auth::user()->id)
+            ->where('till_finish', 1)
             ->get();
         $pending=DB::table('borrow')->select('*')
             ->where('room_start', '>', Carbon::now()->toTimeString())
             ->where('room_date', Carbon::now()->toDateString())
             ->where('id', Auth::user()->id)
+            ->where('till_finish', 1)
             ->get();
         return view('user/myroom')
             ->with('data',$data)
@@ -129,11 +131,13 @@ class UserController extends Controller
                 ->where('room_end' ,'>', Carbon::now()->toTimeString())
                 ->where('room_date', Carbon::now()->toDateString())
                 ->where('id', Auth::user()->id)
+                ->where('till_finish', 1)
                 ->get();
             $pending=DB::table('borrow')->select('*')
                 ->where('room_start', '>', Carbon::now()->toTimeString())
                 ->where('room_date', Carbon::now()->toDateString())
                 ->where('id', Auth::user()->id)
+                ->where('till_finish', 1)
                 ->get();
 
             // page if everything loaded successfully
@@ -153,8 +157,13 @@ class UserController extends Controller
             return back()->with('error', 'QR Code is not correct.');
         }
     }
-    public function cancelroom($room_id)
+    public function cancelroom($room_id, $borrow_id)
     {
-        # code...
+        DB::table('borrow')
+                ->where('borrow_id' , $borrow_id)
+                ->where('room_id' , $room_id)
+                ->update(['till_finish' => 0]);
+                ;
+        return redirect()->route('myroom');
     }
 }
