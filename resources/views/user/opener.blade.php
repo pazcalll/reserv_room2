@@ -3,5 +3,5 @@
 <br>
 <br>
 <br>
-{{now()->toDateString()}} end<br>
+{{$start}}
 @endsection
