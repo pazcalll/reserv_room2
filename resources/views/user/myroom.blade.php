@@ -1,6 +1,9 @@
 @extends('user/index')
 @section('content')
 <body style="margin-bottom: 300px;">
+  @if (isset($pendingroom))
+    {{$pendingroom}}
+  @endif
   <div class="d-flex justify-content-begin">
     <div class="content" >
       <h2 class="content-title"><b>Active Room</b></h2>

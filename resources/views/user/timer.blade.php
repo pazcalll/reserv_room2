@@ -30,12 +30,22 @@
             </div> --}}
             <select name="starth" id="starth" style="border: none">
               <?php for ($i=0; $i < 24; $i++) { 
-                echo "<option value=$i>$i</option>";
+                if (intval($nowhour)==$i) {
+                  echo "<option selected value=$i>$i</option>";
+                }
+                else {
+                  echo "<option value=$i>$i</option>";
+                }
               } ?>
             </select>:
             <select name="startm" id="startm" style="border: none">
-              <?php for ($i=0; $i < 24; $i++) { 
-                echo "<option value=$i>$i</option>";
+              <?php for ($i=0; $i < 60; $i++) { 
+                if (intval($nowminute)==$i) {
+                  echo "<option selected value=$i>$i</option>";
+                }
+                else {
+                  echo "<option value=$i>$i</option>";
+                }
               } ?>
             </select>
           </div>
@@ -52,12 +62,22 @@
             </div> --}}
             <select name="endh" id="endh" style="border: none">
               <?php for ($i=0; $i < 24; $i++) { 
-                echo "<option value=$i>$i</option>";
+                if (intval($nowhour)==$i) {
+                  echo "<option selected value=$i>$i</option>";
+                }
+                else {
+                  echo "<option value=$i>$i</option>";
+                };
               } ?>
             </select>:
             <select name="endm" id="endm" style="border: none">
-              <?php for ($i=0; $i < 24; $i++) { 
-                echo "<option value=$i>$i</option>";
+              <?php for ($i=0; $i < 60; $i++) { 
+                if (intval($nowminute)==$i) {
+                  echo "<option selected value=$i>$i</option>";
+                }
+                else {
+                  echo "<option value=$i>$i</option>";
+                }
               } ?>
             </select>
           </div>

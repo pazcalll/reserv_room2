@@ -27,6 +27,7 @@ class UserController extends Controller
             ->where('room_start' ,'<', Carbon::now()->toTimeString())
             ->where('room_end' ,'>', Carbon::now()->toTimeString())
             ->where('room_date', Carbon::now()->toDateString())
+            ->where('till_finish', 1)
             ->get();
             $data = '';
             foreach ($inactive as $row) {
@@ -35,7 +36,14 @@ class UserController extends Controller
         $active = DB::table('rooms')
             // ->join('borrow', 'rooms.room_id', '!=', 'borrow.room_id')
             ->where('room_status','available')
-            ->where('rooms.room_id', '!=', $data)
+            // ->where('rooms.room_id', '!=', $data)
+            ->whereNotIn('room_id', function($query){
+                $query->select('room_id')->from('borrow')
+                    ->where('room_start' ,'<', Carbon::now()->toTimeString())
+                    ->where('room_end' ,'>', Carbon::now()->toTimeString())
+                    ->where('room_date', '>=', Carbon::now()->toDateString())
+                    ->where('till_finish', 1);
+            })
             // ->where('borrow.room_start' ,'<', Carbon::now()->toTimeString())
             // ->where('borrow.room_end' ,'>', Carbon::now()->toTimeString())
             ->get();
@@ -74,6 +82,7 @@ class UserController extends Controller
             ->where('room_start' ,'<', Carbon::now()->toTimeString())
             ->where('room_end' ,'>', Carbon::now()->toTimeString())
             ->where('room_date', Carbon::now()->toDateString())
+            ->where('till_finish', 1)
             ->where('id', Auth::user()->id)
             ->get();
         $pending=DB::table('borrow')->select('*')
@@ -81,14 +90,30 @@ class UserController extends Controller
             ->where('room_date', Carbon::now()->toDateString())
             ->where('id', Auth::user()->id)
             ->get();
-
+        $nowhour="";
+        $nowminute="";
+        for ($i=0; $i < strlen(Carbon::now()->toTimeString()); $i++) { 
+            $nowhour=$nowhour.(Carbon::now()->toTimeString()[$i]);
+            if ($i==1) {
+                break;
+            }
+        }
+        for ($i=strlen(Carbon::now()->toTimeString())-1; $i > 0; $i--) { 
+            if ($i==3 || $i==4) {
+                $nowminute=(Carbon::now()->toTimeString()[$i]).$nowminute;
+            }
+        }
         if ($data != "[]") {
             return back()->with('error', 'You already have an active room');
         }
         if ($pending != "[]") {
             return back()->with('error', 'You already have a pending room');
         }
-        return view('user/timer')->with('room_id', $room_id);
+        return view('user/timer')
+            ->with('nowminute', $nowminute)
+            ->with('nowhour', $nowhour)
+            ->with('nowtime', Carbon::now()->toTimeString())
+            ->with('room_id', $room_id);
     }
     public function scan(Request $request, $room_id)
     {
@@ -173,12 +198,44 @@ class UserController extends Controller
         // else{
         //     return back()->with('error', 'QR Code is not correct.');
         // }
-        if (intval($request->starth) >= intval($request->endh)) {
+        if (intval($request->starth) >= intval($request->endh) && intval($request->startm) >= intval($request->endm)) {
+            $nowhour="";
+            $nowminute="";
+            for ($i=0; $i < strlen(Carbon::now()->toTimeString()); $i++) { 
+                $nowhour=$nowhour.(Carbon::now()->toTimeString()[$i]);
+                if ($i==1) {
+                    break;
+                }
+            }
+            for ($i=strlen(Carbon::now()->toTimeString())-1; $i > 0; $i--) { 
+                if ($i==3 || $i==4) {
+                    $nowminute=(Carbon::now()->toTimeString()[$i]).$nowminute;
+                }
+            }
             return view('user/timer')->with('end', $request->endh)
                 ->with('start', $request->starth)
                 ->with('room_id', $request->room_id)
+                ->with('nowhour', $request->nowhour)
+                ->with('nowminute', $request->nowminute)
                 ->with('errors','Start time must less than end time');
         }else{
+            $pendingroom=DB::table('borrow')->select('*')
+                ->where('room_start','<',Carbon::now()->toTimeString())
+                ->where('room_end','>',$request->endh)
+                ->where('room_date', Carbon::now()->toDateString())
+                ->where('till_finish', 1)
+                ->get();
+            if ($pendingroom!="[]") {
+                // return view('user/timer')->with('end', $request->endh)
+                //     ->with('start', $request->starth)
+                //     ->with('room_id', $request->room_id)
+                //     ->with('nowhour', $request->nowhour)
+                //     ->with('nowminute', $request->nowminute)
+                //     ->with('errors','This room will be used from '.$pendingroom->room_start.' to '.$pendingroom->room_end);
+                    // dd($pendingroom);
+                echo "wtf";
+            }
+            // dd($pendingroom);
             $insert_data = array(
                 'room_id' => $request->room_id,
                 'status' => '',
@@ -189,8 +246,20 @@ class UserController extends Controller
                 'till_finish' => 1
             );
             DB::table('borrow')->insert($insert_data);
-
-            return redirect()->route('index');
+            $data=DB::table('borrow')->select('*')
+                ->where('room_start' ,'<', Carbon::now()->toTimeString())
+                ->where('room_end' ,'>', Carbon::now()->toTimeString())
+                ->where('room_date', Carbon::now()->toDateString())
+                ->where('id', Auth::user()->id)
+                ->where('till_finish', 1)
+                ->get();
+            $pending=DB::table('borrow')->select('*')
+                ->where('room_start', '>', Carbon::now()->toTimeString())
+                ->where('room_date', Carbon::now()->toDateString())
+                ->where('id', Auth::user()->id)
+                ->where('till_finish', 1)
+                ->get();
+            return redirect()->route('myroom')->with('pendingroom',$pendingroom)->with('data',$data)->with('pending',$pending);
         }
     }
     public function cancelroom($room_id, $borrow_id)
