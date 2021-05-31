@@ -154,8 +154,8 @@
                             @csrf
                             <input type="text" id="scanned-QR" name="scanned_QR" value="" hidden><br>
                             <input type="text" name="room_id" id="room_id"  hidden value="{{$room_id}}">
-                            <input type="time" name="start" id="start"  hidden value="{{$start}}">
-                            <input type="time" name="end" id="end" hidden value="{{$end}}">
+                            <input type="text" name="start" id="start"  hidden value="{{$start}}">
+                            <input type="text" name="end" id="end" hidden value="{{$end}}">
                             <button type="submit" onclick="change()" href="" class="btn btn-success">Confirm</button>
                         </form>
                         <script>

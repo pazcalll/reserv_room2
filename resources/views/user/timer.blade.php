@@ -5,15 +5,19 @@
 
 <body style="margin-bottom: 300px;">
   {{-- <form action="{{url('index')}}/{{$room_id}}/{{'scan'}}" method="get"> --}}
-  <form action="{{url('saveroom')}}" method="post">
+  {{-- <form action="{{url('saveroom')}}" method="post"> --}}
+  <form action="{{url('timer')}}/{{$room_id}}/{{'scan'}}" method="post">
     @csrf
     
     <div class="d-flex justify-content-begin">
       <div class="content" >
         @if ($errors != "[]")
-          <div class="alert alert-danger" role="alert">
-              {{$errors}}
-          </div>
+          {{-- <div class="alert alert-danger" role="alert">
+              @foreach ($pendingroom as $p)
+                  {{"This room will be used starts from ".$p->room_start." to ".$p->room_end}}
+              @endforeach
+          </div> --}}
+          {{$errors}}
         @endif
         {{-- @if (session()->get('end'))
           start: {{session()->get('start')}} <br>
@@ -73,10 +77,10 @@
             <select name="endm" id="endm" style="border: none">
               <?php for ($i=0; $i < 60; $i++) { 
                 if (intval($nowminute)==$i) {
-                  echo "<option selected value=$i>$i</option>";
+                  echo "<option selected value='$i'>$i</option>";
                 }
                 else {
-                  echo "<option value=$i>$i</option>";
+                  echo "<option value='$i'>$i</option>";
                 }
               } ?>
             </select>

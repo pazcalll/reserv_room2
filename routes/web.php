@@ -29,5 +29,5 @@ Route::get('/usermanagement', 'UserController@usermanagement')->name('usermanage
 Route::get('/usermanagement/changepw', 'UserController@changepw')->name('changepw');
 Route::post('/usermanagement/newpw', 'UserController@newpw')->name('newpw');
 Route::get('/timer/{room_id}','UserController@timer')->name('timer');
-Route::get('/timer/{room_id}/scan','UserController@scan')->name('scan');
+Route::post('/timer/{room_id}/scan','UserController@scan')->name('scan');
 Route::post('/saveroom', 'UserController@saveroom')->name('saveroom');

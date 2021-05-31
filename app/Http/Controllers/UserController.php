@@ -198,7 +198,7 @@ class UserController extends Controller
         // else{
         //     return back()->with('error', 'QR Code is not correct.');
         // }
-        if (intval($request->starth) >= intval($request->endh) && intval($request->startm) >= intval($request->endm)) {
+        if (intval($request->starth) > intval($request->endh) && intval($request->startm) > intval($request->endm)) {
             $nowhour="";
             $nowminute="";
             for ($i=0; $i < strlen(Carbon::now()->toTimeString()); $i++) { 
@@ -220,27 +220,36 @@ class UserController extends Controller
                 ->with('errors','Start time must less than end time');
         }else{
             $pendingroom=DB::table('borrow')->select('*')
-                ->where('room_start','<',Carbon::now()->toTimeString())
-                ->where('room_end','>',$request->endh)
+                ->where('room_id', $request->room_id)
+                // ->orWhere([['room_start', '>=', $request->starth], ['room_end', '<=', $request->endh]])
+                ->Where(function($query) use ($request){
+                  $query->where('room_start', '>= ', $request->starth)
+                        ->orwhere('room_end', '<= ', $request->endh);  
+                })
                 ->where('room_date', Carbon::now()->toDateString())
+                // ->where('room_start','<',Carbon::now()->toTimeString())
+                // ->where('room_end','>',$request->endh)
+                // ->where('room_date', Carbon::now()->toDateString())
+                // ->wherebetween('room_start', [$request->starth, $request->endh])
                 ->where('till_finish', 1)
                 ->get();
             if ($pendingroom!="[]") {
-                // return view('user/timer')->with('end', $request->endh)
-                //     ->with('start', $request->starth)
-                //     ->with('room_id', $request->room_id)
-                //     ->with('nowhour', $request->nowhour)
-                //     ->with('nowminute', $request->nowminute)
-                //     ->with('errors','This room will be used from '.$pendingroom->room_start.' to '.$pendingroom->room_end);
+                return view('user/timer')->with('end', $request->endh)
+                    ->with('start', $request->starth)
+                    ->with('room_id', $request->room_id)
+                    ->with('nowhour', $request->nowhour)
+                    ->with('nowminute', $request->nowminute)
+                    ->with('pendingroom', $pendingroom)
+                    ->with('errors', $pendingroom);
                     // dd($pendingroom);
-                echo "wtf";
+                // echo $pendingroom;
             }
-            // dd($pendingroom);
+            // dd($request);
             $insert_data = array(
                 'room_id' => $request->room_id,
                 'status' => '',
-                'room_start' => $request->starth.":".$request->startm,
-                'room_end' => $request->endh.":".$request->endm,
+                'room_start' => $request->start,
+                'room_end' => $request->end,
                 'id' => Auth::user()->id,
                 'room_date' => date('y-m-d'),
                 'till_finish' => 1
