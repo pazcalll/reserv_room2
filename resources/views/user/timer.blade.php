@@ -12,12 +12,15 @@
     <div class="d-flex justify-content-begin">
       <div class="content" >
         @if ($errors != "[]")
-          {{-- <div class="alert alert-danger" role="alert">
+          <div class="alert alert-danger" role="alert">
+            @if ($pendingroom != "[]")
               @foreach ($pendingroom as $p)
-                  {{"This room will be used starts from ".$p->room_start." to ".$p->room_end}}
+                {{"This room will be used starts from ".$p->room_start." to ".$p->room_end}}
               @endforeach
-          </div> --}}
-          {{$errors}}
+            @endif
+              {{"Bad time request, please check the time."}}
+            {{-- @endif --}}
+          </div>
         @endif
         {{-- @if (session()->get('end'))
           start: {{session()->get('start')}} <br>

@@ -3,5 +3,6 @@
 <br>
 <br>
 <br>
-{{$start}}
+error 
+{{$error}}
 @endsection

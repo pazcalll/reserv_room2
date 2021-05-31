@@ -120,7 +120,7 @@ class UserController extends Controller
         if (intval($request->starth) >= intval($request->endh)) {
             return view('user/opener')->with('end', $request->endh)
                 ->with('start', $request->starth)
-                ->with('error','Start time must less than end time');
+                ->with('error','Start time must less than end time, at least 1 hour');
         }
         $end = $request->endh.":".$request->endm;
         $start = $request->starth.":".$request->startm;
